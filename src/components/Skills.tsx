@@ -1,12 +1,15 @@
-import { skills } from "@/data/content";
+import { skills, skillsSection } from "@/data/content";
+import SectionHeading from "@/components/SectionHeading";
 
 export default function Skills() {
   return (
-    <section id="skills" className="mx-auto max-w-5xl px-6 py-20">
-      <h2 className="text-sm font-semibold uppercase tracking-widest text-amber-800">
-        Skills
-      </h2>
-      <div className="mt-6 grid gap-6 sm:grid-cols-2">
+    <section id="skills" className="mx-auto max-w-5xl px-6 py-20 sm:py-28">
+      <SectionHeading
+        eyebrow={skillsSection.eyebrow}
+        title={skillsSection.title}
+        description={skillsSection.description}
+      />
+      <div className="mt-10 grid gap-4 sm:grid-cols-2 sm:gap-6">
         {skills.map((group) => (
           <div
             key={group.category}

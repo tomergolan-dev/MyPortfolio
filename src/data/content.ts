@@ -8,11 +8,15 @@ export const profile = {
   resumeUrl: "#",
   social: {
     github: "https://github.com/tomergolan-dev",
+    githubHandle: "@tomergolan-dev",
     linkedin: "#",
+    linkedinHandle: "Tomer Golan",
   },
 };
 
 export const about = {
+  eyebrow: "About",
+  title: "A bit about me",
   bio: [
     "I'm a software engineer who enjoys turning ambiguous problems into clean, working products. I care about code that's easy to read, easy to change, and does exactly what it says.",
     "Outside of shipping features, I like digging into the 'why' behind a system's design and finding the simplest solution that holds up under real use.",
@@ -26,42 +30,52 @@ export const about = {
 
 export type Project = {
   title: string;
+  category: string;
   description: string;
-  tags: string[];
-  href?: string;
-  repo?: string;
+  status: string;
+  href: string;
+};
+
+export const projectsSection = {
+  eyebrow: "Projects",
+  title: "Selected Projects",
+  description:
+    "A few projects that reflect how I approach problems — from first concept to shipped product. Replace these with your own case studies.",
 };
 
 export const projects: Project[] = [
   {
     title: "Project One",
-    description:
-      "A short description of what this project does and the problem it solves. Replace with a real case study.",
-    tags: ["Next.js", "TypeScript", "Tailwind"],
+    category: "Web App",
+    description: "A short description of what this project does and the problem it solves.",
+    status: "Completed",
     href: "#",
-    repo: "#",
   },
   {
     title: "Project Two",
-    description:
-      "A short description of what this project does and the problem it solves. Replace with a real case study.",
-    tags: ["Node.js", "PostgreSQL", "REST API"],
+    category: "API & Backend",
+    description: "A short description of what this project does and the problem it solves.",
+    status: "In Progress",
     href: "#",
-    repo: "#",
   },
   {
     title: "Project Three",
-    description:
-      "A short description of what this project does and the problem it solves. Replace with a real case study.",
-    tags: ["React", "Python", "Data"],
+    category: "Data",
+    description: "A short description of what this project does and the problem it solves.",
+    status: "MVP",
     href: "#",
-    repo: "#",
   },
 ];
 
 export type SkillGroup = {
   category: string;
   items: string[];
+};
+
+export const skillsSection = {
+  eyebrow: "Skills",
+  title: "Toolbox",
+  description: "The languages, frameworks, and tools I reach for most often.",
 };
 
 export const skills: SkillGroup[] = [
@@ -82,6 +96,13 @@ export const skills: SkillGroup[] = [
     items: ["Git", "Docker", "Vercel", "CI/CD"],
   },
 ];
+
+export const contactSection = {
+  eyebrow: "Contact",
+  title: "Let's Talk",
+  description:
+    "I'm always open to new opportunities and interesting projects. If you're looking for someone who's a fast learner and not afraid of the unexpected — let's talk.",
+};
 
 export const navLinks = [
   { label: "About", href: "#about" },

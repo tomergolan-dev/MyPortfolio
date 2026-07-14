@@ -1,10 +1,11 @@
 import { about } from "@/data/content";
+import SectionHeading from "@/components/SectionHeading";
 
 export default function About() {
   return (
-    <section id="about" className="mx-auto max-w-5xl px-6 py-20">
-      <h2 className="text-sm font-semibold uppercase tracking-widest text-amber-800">About</h2>
-      <div className="mt-6 grid gap-12 sm:grid-cols-3">
+    <section id="about" className="mx-auto max-w-5xl px-6 py-20 sm:py-28">
+      <SectionHeading eyebrow={about.eyebrow} title={about.title} />
+      <div className="mt-10 grid gap-10 sm:grid-cols-3 sm:gap-12">
         <div className="space-y-4 sm:col-span-2">
           {about.bio.map((paragraph) => (
             <p key={paragraph} className="text-base leading-relaxed text-stone-600">
@@ -12,7 +13,7 @@ export default function About() {
             </p>
           ))}
         </div>
-        <dl className="grid grid-cols-3 gap-4 sm:grid-cols-1">
+        <dl className="grid grid-cols-3 gap-3 sm:grid-cols-1 sm:gap-4">
           {about.stats.map((stat) => (
             <div
               key={stat.label}
