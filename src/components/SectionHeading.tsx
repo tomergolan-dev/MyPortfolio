@@ -1,44 +1,31 @@
+"use client";
+
+import { motion } from "framer-motion";
+
 type SectionHeadingProps = {
   eyebrow: string;
   title: string;
   description?: string;
-  light?: boolean;
 };
 
-export default function SectionHeading({
-  eyebrow,
-  title,
-  description,
-  light = false,
-}: SectionHeadingProps) {
+export default function SectionHeading({ eyebrow, title, description }: SectionHeadingProps) {
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
       <div className="flex items-center gap-3">
-        <span className={`h-px w-6 ${light ? "bg-white/40" : "bg-stone-900/30"}`} />
-        <span
-          className={`text-xs font-semibold uppercase tracking-widest ${
-            light ? "text-white/60" : "text-stone-500"
-          }`}
-        >
+        <span className="h-px w-6 bg-ide-blue/50" />
+        <span className="text-xs font-semibold uppercase tracking-widest text-ide-blue">
           {eyebrow}
         </span>
       </div>
-      <h2
-        className={`mt-4 text-4xl font-bold tracking-tight sm:text-5xl ${
-          light ? "text-white" : "text-stone-900"
-        }`}
-      >
-        {title}
-      </h2>
+      <h2 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">{title}</h2>
       {description && (
-        <p
-          className={`mt-4 max-w-xl text-base leading-relaxed ${
-            light ? "text-white/70" : "text-stone-600"
-          }`}
-        >
-          {description}
-        </p>
+        <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-400">{description}</p>
       )}
-    </div>
+    </motion.div>
   );
 }

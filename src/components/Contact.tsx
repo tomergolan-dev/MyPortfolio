@@ -1,64 +1,97 @@
+"use client";
+
 import { Download, Mail, MapPin } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
-import { contactSection, profile, whatsappUrl } from "@/data/content";
+import { motion } from "framer-motion";
 import SectionHeading from "@/components/SectionHeading";
 import { GithubIcon, LinkedinIcon, WhatsAppIcon } from "@/components/icons/BrandIcons";
+import { whatsappUrlFrom } from "@/lib/whatsapp";
+import type { SectionWithChildren } from "@/lib/data/sections";
+import type { SiteSettings } from "@/types/database";
 
-export default function Contact() {
+const container = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" as const } },
+};
+
+export default function Contact({
+  section,
+  settings,
+}: {
+  section: SectionWithChildren;
+  settings: SiteSettings;
+}) {
   return (
     <section id="contact" className="mx-auto max-w-5xl px-6 py-20 sm:py-28">
-      <div className="rounded-3xl bg-navy px-6 py-10 sm:px-12 sm:py-14">
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-80px" }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="rounded-3xl border border-white/10 bg-surface px-6 py-10 shadow-2xl shadow-black/30 sm:px-12 sm:py-14"
+      >
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-start lg:gap-12">
           <div>
-            <SectionHeading eyebrow={contactSection.eyebrow} title={contactSection.title} light />
-            <p className="mt-4 max-w-md text-base leading-relaxed text-white/70">
-              {contactSection.description}
+            <SectionHeading eyebrow="Contact" title={section.title} />
+            <p className="mt-4 max-w-md text-base leading-relaxed text-slate-400">
+              {section.description}
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <a
-                href={`mailto:${profile.email}`}
-                className="inline-flex items-center gap-2 rounded-full bg-[#faf8f4] px-6 py-3 text-sm font-semibold text-navy transition-colors hover:bg-white"
+                href={`mailto:${settings.email}`}
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-500/20 transition-transform duration-300 hover:scale-105"
               >
                 <Mail className="h-4 w-4" />
                 Email me
               </a>
               <a
-                href={profile.resumeUrl}
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/5"
+                href={settings.resume_url ?? "#"}
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/5"
               >
                 <Download className="h-4 w-4" />
                 Download CV
               </a>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <InfoTile icon={Mail} label="Email" value={profile.email} href={`mailto:${profile.email}`} />
+          <motion.div
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-80px" }}
+            className="grid grid-cols-2 gap-3"
+          >
+            <InfoTile icon={Mail} label="Email" value={settings.email} href={`mailto:${settings.email}`} />
             <InfoTile
               icon={LinkedinIcon}
               label="LinkedIn"
-              value={profile.social.linkedinHandle}
-              href={profile.social.linkedin}
+              value={settings.linkedin_handle}
+              href={settings.linkedin_url}
             />
             <InfoTile
               icon={GithubIcon}
               label="GitHub"
-              value={profile.social.githubHandle}
-              href={profile.social.github}
+              value={settings.github_handle}
+              href={settings.github_url}
             />
             <InfoTile
               icon={WhatsAppIcon}
               label="WhatsApp"
-              value={profile.whatsapp}
-              href={whatsappUrl}
+              value={settings.whatsapp}
+              href={whatsappUrlFrom(settings.whatsapp)}
             />
-            <InfoTile icon={MapPin} label="Location" value={profile.location} />
-          </div>
+            <InfoTile icon={MapPin} label="Location" value={settings.location} />
+          </motion.div>
         </div>
         <div className="mt-12 h-px bg-white/10" />
-        <p className="mt-6 text-center text-xs uppercase tracking-widest text-white/40 sm:text-left">
-          © {new Date().getFullYear()} {profile.name} · Portfolio
+        <p className="mt-6 text-center text-xs uppercase tracking-widest text-slate-500 sm:text-left">
+          © {new Date().getFullYear()} {settings.name} · Portfolio
         </p>
-      </div>
+      </motion.div>
     </section>
   );
 }
@@ -75,15 +108,19 @@ function InfoTile({
   href?: string;
 }) {
   const content = (
-    <div className="flex h-full items-center gap-3 rounded-xl border border-white/10 p-4">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white">
-        <Icon className="h-4 w-4" />
+    <motion.div
+      variants={item}
+      whileHover={{ y: -3 }}
+      className="flex h-full items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.02] p-3 transition-colors hover:border-ide-blue/30"
+    >
+      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/10 text-ide-blue">
+        <Icon className="h-3.5 w-3.5" />
       </span>
       <div className="min-w-0">
-        <p className="text-[11px] uppercase tracking-widest text-white/40">{label}</p>
-        <p className="truncate text-sm font-medium text-white">{value}</p>
+        <p className="text-[10px] uppercase tracking-widest text-slate-500">{label}</p>
+        <p className="whitespace-nowrap text-[13px] font-medium text-white">{value}</p>
       </div>
-    </div>
+    </motion.div>
   );
 
   return href ? (
