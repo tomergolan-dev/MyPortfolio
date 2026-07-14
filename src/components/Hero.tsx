@@ -1,4 +1,5 @@
-import { profile } from "@/data/content";
+import { profile, whatsappUrl } from "@/data/content";
+import { WhatsAppIcon } from "@/components/icons/BrandIcons";
 
 export default function Hero() {
   return (
@@ -34,6 +35,13 @@ export default function Hero() {
             <span className="ml-1 inline-block transition-transform group-hover:translate-x-1">
               →
             </span>
+          </a>
+          <a
+            href={whatsappUrl}
+            aria-label="Message me on WhatsApp"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-stone-900/15 text-stone-900 transition-colors hover:border-emerald-600/40 hover:text-emerald-700"
+          >
+            <WhatsAppIcon className="h-4 w-4" />
           </a>
         </div>
       </div>

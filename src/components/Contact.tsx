@@ -1,8 +1,8 @@
 import { Download, Mail, MapPin } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
-import { contactSection, profile } from "@/data/content";
+import { contactSection, profile, whatsappUrl } from "@/data/content";
 import SectionHeading from "@/components/SectionHeading";
-import { GithubIcon, LinkedinIcon } from "@/components/icons/BrandIcons";
+import { GithubIcon, LinkedinIcon, WhatsAppIcon } from "@/components/icons/BrandIcons";
 
 export default function Contact() {
   return (
@@ -44,6 +44,12 @@ export default function Contact() {
               label="GitHub"
               value={profile.social.githubHandle}
               href={profile.social.github}
+            />
+            <InfoTile
+              icon={WhatsAppIcon}
+              label="WhatsApp"
+              value={profile.whatsapp}
+              href={whatsappUrl}
             />
             <InfoTile icon={MapPin} label="Location" value={profile.location} />
           </div>

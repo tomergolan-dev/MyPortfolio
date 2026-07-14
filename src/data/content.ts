@@ -6,6 +6,7 @@ export const profile = {
   location: "Israel",
   email: "tomergolan2016@gmail.com",
   resumeUrl: "#",
+  whatsapp: "+972533454053",
   social: {
     github: "https://github.com/tomergolan-dev",
     githubHandle: "@tomergolan-dev",
@@ -13,6 +14,8 @@ export const profile = {
     linkedinHandle: "Tomer Golan",
   },
 };
+
+export const whatsappUrl = `https://wa.me/${profile.whatsapp.replace(/[^\d]/g, "")}`;
 
 export const about = {
   eyebrow: "About",
