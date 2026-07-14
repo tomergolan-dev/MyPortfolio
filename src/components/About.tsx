@@ -1,0 +1,26 @@
+import { about } from "@/data/content";
+
+export default function About() {
+  return (
+    <section id="about" className="mx-auto max-w-5xl px-6 py-20">
+      <h2 className="text-sm font-semibold uppercase tracking-widest text-emerald-400">About</h2>
+      <div className="mt-6 grid gap-12 sm:grid-cols-3">
+        <div className="space-y-4 sm:col-span-2">
+          {about.bio.map((paragraph) => (
+            <p key={paragraph} className="text-base leading-relaxed text-zinc-400">
+              {paragraph}
+            </p>
+          ))}
+        </div>
+        <dl className="grid grid-cols-3 gap-4 sm:grid-cols-1">
+          {about.stats.map((stat) => (
+            <div key={stat.label} className="rounded-xl border border-white/10 p-4">
+              <dt className="text-xs text-zinc-500">{stat.label}</dt>
+              <dd className="mt-1 text-2xl font-semibold text-zinc-50">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  );
+}
