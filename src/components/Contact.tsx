@@ -63,7 +63,7 @@ export default function Contact({
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-80px" }}
-            className="grid grid-cols-2 gap-3"
+            className="grid grid-cols-1 gap-3 sm:grid-cols-2"
           >
             <InfoTile icon={Mail} label="Email" value={settings.email} href={`mailto:${settings.email}`} />
             <InfoTile
