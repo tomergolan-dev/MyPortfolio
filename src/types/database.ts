@@ -43,6 +43,8 @@ export type Database = {
           resume_url: string | null;
           resume_filename: string | null;
           profile_image_url: string | null;
+          page_title: string;
+          meta_description: string;
           updated_at: string;
         },
         {
@@ -63,6 +65,8 @@ export type Database = {
           resume_url?: string | null;
           resume_filename?: string | null;
           profile_image_url?: string | null;
+          page_title?: string;
+          meta_description?: string;
           updated_at?: string;
         }
       >;

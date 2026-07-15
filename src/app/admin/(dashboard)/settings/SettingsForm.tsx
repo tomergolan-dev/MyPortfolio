@@ -22,6 +22,8 @@ const schema = z.object({
   github_handle: z.string().min(1, "Required"),
   linkedin_url: z.string().min(1, "Required"),
   linkedin_handle: z.string().min(1, "Required"),
+  page_title: z.string().min(1, "Required"),
+  meta_description: z.string().min(1, "Required"),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -47,6 +49,8 @@ export default function SettingsForm({ settings }: { settings: SiteSettings }) {
       github_handle: settings.github_handle,
       linkedin_url: settings.linkedin_url,
       linkedin_handle: settings.linkedin_handle,
+      page_title: settings.page_title,
+      meta_description: settings.meta_description,
     },
   });
 
@@ -70,6 +74,19 @@ export default function SettingsForm({ settings }: { settings: SiteSettings }) {
         <FormField label="Name" {...register("name")} error={errors.name?.message} />
         <FormField label="Role" {...register("role")} error={errors.role?.message} />
       </div>
+      <p className="pt-2 text-xs font-semibold uppercase tracking-widest text-stone-500">
+        Browser tab &amp; search engines
+      </p>
+      <FormField
+        label="Page title (browser tab)"
+        {...register("page_title")}
+        error={errors.page_title?.message}
+      />
+      <FormField
+        label="Meta description (search engines)"
+        {...register("meta_description")}
+        error={errors.meta_description?.message}
+      />
       <FormField label="Tagline" {...register("tagline")} error={errors.tagline?.message} />
       <FormField
         label="Hero headline"

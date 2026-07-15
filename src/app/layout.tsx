@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import BackgroundArt from "@/components/BackgroundArt";
+import { getSiteSettings } from "@/lib/data/settings";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,10 +14,13 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Tomer Golan — Software Engineer",
-  description: "Portfolio of Tomer Golan, a software engineer building web applications.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  return {
+    title: settings.page_title || `${settings.name} — ${settings.role}`,
+    description: settings.meta_description || settings.tagline,
+  };
+}
 
 export default function RootLayout({
   children,

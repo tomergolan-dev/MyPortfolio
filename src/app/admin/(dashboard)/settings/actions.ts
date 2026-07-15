@@ -19,6 +19,8 @@ const settingsSchema = z.object({
   github_handle: z.string().min(1, "Required"),
   linkedin_url: z.string().min(1, "Required"),
   linkedin_handle: z.string().min(1, "Required"),
+  page_title: z.string().min(1, "Required"),
+  meta_description: z.string().min(1, "Required"),
 });
 
 export type SettingsFormValues = z.infer<typeof settingsSchema>;
