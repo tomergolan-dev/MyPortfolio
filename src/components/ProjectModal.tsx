@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowUpRight, X } from "lucide-react";
 import { GithubIcon } from "@/components/icons/BrandIcons";
+import ImageCarousel from "@/components/ImageCarousel";
 import type { ProjectWithImages } from "@/lib/data/projects";
 
 function isRealUrl(url: string | null) {
@@ -131,18 +131,12 @@ export default function ProjectModal({
         </div>
 
         {project.images.length > 0 && (
-          <div className="mt-6 space-y-4">
-            {project.images.map((image) => (
-              <Image
-                key={image.id}
-                src={image.url}
-                alt={image.alt_text || project.title}
-                width={1600}
-                height={1000}
-                sizes="(max-width: 768px) 100vw, 700px"
-                className="h-auto w-full rounded-2xl border border-white/10"
-              />
-            ))}
+          <div className="mt-6">
+            <ImageCarousel
+              images={project.images}
+              fallbackAlt={project.title}
+              sizes="(max-width: 768px) 100vw, 700px"
+            />
           </div>
         )}
       </motion.div>
