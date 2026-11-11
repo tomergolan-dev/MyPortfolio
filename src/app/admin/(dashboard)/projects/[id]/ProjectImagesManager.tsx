@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useActionState } from "react";
-import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import type { UploadState } from "@/components/admin/FileUploadForm";
 import { deleteProjectImage, moveProjectImage, uploadProjectImage } from "../actions";
 import type { ProjectImage } from "@/types/database";
@@ -37,9 +37,9 @@ export default function ProjectImagesManager({
                       type="submit"
                       disabled={index === 0}
                       className="text-stone-500 hover:text-stone-900 disabled:opacity-20"
-                      aria-label="Move up"
+                      aria-label="Move earlier"
                     >
-                      <ChevronUp className="h-3.5 w-3.5" />
+                      <ChevronLeft className="h-3.5 w-3.5" />
                     </button>
                   </form>
                   <form action={moveProjectImage.bind(null, image.id, projectId, "down")}>
@@ -47,9 +47,9 @@ export default function ProjectImagesManager({
                       type="submit"
                       disabled={index === images.length - 1}
                       className="text-stone-500 hover:text-stone-900 disabled:opacity-20"
-                      aria-label="Move down"
+                      aria-label="Move later"
                     >
-                      <ChevronDown className="h-3.5 w-3.5" />
+                      <ChevronRight className="h-3.5 w-3.5" />
                     </button>
                   </form>
                 </div>
