@@ -67,7 +67,7 @@ export default function Projects({
                 <div className="flex flex-1 flex-col justify-between p-6">
                   <div>
                     <h3 className="text-xl font-bold text-white">{project.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                    <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-slate-400">
                       {project.description}
                     </p>
                   </div>
