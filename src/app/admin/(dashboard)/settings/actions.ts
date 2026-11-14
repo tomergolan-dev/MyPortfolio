@@ -42,87 +42,40 @@ export async function updateSettings(values: unknown): Promise<UpdateSettingsRes
   return { success: true };
 }
 
-const MAX_RESUME_BYTES = 10 * 1024 * 1024;
-
-export async function uploadResume(_prev: UploadState, formData: FormData): Promise<UploadState> {
+export async function saveResume(file: { path: string; filename: string }): Promise<UploadState> {
   const { supabase } = await requireAdmin();
+  if (!/^resume-\d+\.pdf$/.test(file.path)) return { error: "Invalid upload." };
 
-  const file = formData.get("resume");
-  if (!(file instanceof File) || file.size === 0) {
-    return { error: "Choose a PDF file to upload." };
-  }
-  if (file.type !== "application/pdf") {
-    return { error: "Resume must be a PDF file." };
-  }
-  if (file.size > MAX_RESUME_BYTES) {
-    return { error: "Resume must be smaller than 10MB." };
-  }
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("resume").getPublicUrl(file.path);
 
-  try {
-    const filename = `resume-${Date.now()}.pdf`;
-    const { error: uploadError } = await supabase.storage
-      .from("resume")
-      .upload(filename, file, { contentType: "application/pdf", upsert: true });
-    if (uploadError) return { error: uploadError.message };
+  const { error } = await supabase
+    .from("site_settings")
+    .update({ resume_url: publicUrl, resume_filename: file.filename.slice(0, 200) })
+    .eq("id", 1);
+  if (error) return { error: error.message };
 
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("resume").getPublicUrl(filename);
-
-    const { error: updateError } = await supabase
-      .from("site_settings")
-      .update({ resume_url: publicUrl, resume_filename: file.name })
-      .eq("id", 1);
-    if (updateError) return { error: updateError.message };
-
-    revalidatePath("/");
-    revalidatePath("/admin/settings");
-    return { success: true };
-  } catch (error) {
-    console.error("uploadResume failed:", error);
-    return { error: error instanceof Error ? error.message : "Upload failed. Please try again." };
-  }
+  revalidatePath("/");
+  revalidatePath("/admin/settings");
+  return { success: true };
 }
 
-const ALLOWED_PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"];
-
-export async function uploadProfilePhoto(
-  _prev: UploadState,
-  formData: FormData,
-): Promise<UploadState> {
+export async function saveProfilePhoto(file: { path: string }): Promise<UploadState> {
   const { supabase } = await requireAdmin();
+  if (!/^profile-\d+\.(jpeg|png|webp)$/.test(file.path)) return { error: "Invalid upload." };
 
-  const file = formData.get("photo");
-  if (!(file instanceof File) || file.size === 0) {
-    return { error: "Choose an image to upload." };
-  }
-  if (!ALLOWED_PHOTO_TYPES.includes(file.type)) {
-    return { error: "Photo must be a JPEG, PNG, or WebP image." };
-  }
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("profile").getPublicUrl(file.path);
 
-  try {
-    const ext = file.type.split("/")[1];
-    const filename = `profile-${Date.now()}.${ext}`;
-    const { error: uploadError } = await supabase.storage
-      .from("profile")
-      .upload(filename, file, { contentType: file.type, upsert: true });
-    if (uploadError) return { error: uploadError.message };
+  const { error } = await supabase
+    .from("site_settings")
+    .update({ profile_image_url: publicUrl })
+    .eq("id", 1);
+  if (error) return { error: error.message };
 
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("profile").getPublicUrl(filename);
-
-    const { error: updateError } = await supabase
-      .from("site_settings")
-      .update({ profile_image_url: publicUrl })
-      .eq("id", 1);
-    if (updateError) return { error: updateError.message };
-
-    revalidatePath("/");
-    revalidatePath("/admin/settings");
-    return { success: true };
-  } catch (error) {
-    console.error("uploadProfilePhoto failed:", error);
-    return { error: error instanceof Error ? error.message : "Upload failed. Please try again." };
-  }
+  revalidatePath("/");
+  revalidatePath("/admin/settings");
+  return { success: true };
 }

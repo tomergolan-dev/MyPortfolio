@@ -1,25 +1,20 @@
 "use client";
 
-import { useActionState } from "react";
+import { useDirectUpload, type DirectUploadConfig } from "./useDirectUpload";
 
 export type UploadState = { error?: string; success?: boolean };
 
 export default function FileUploadForm({
-  action,
-  fieldName,
-  accept,
   label,
   currentUrl,
   currentLabel,
-}: {
-  action: (prevState: UploadState, formData: FormData) => Promise<UploadState>;
-  fieldName: string;
-  accept: string;
+  ...config
+}: DirectUploadConfig & {
   label: string;
   currentUrl: string | null;
   currentLabel: string;
 }) {
-  const [state, formAction, pending] = useActionState<UploadState, FormData>(action, {});
+  const [state, formAction, pending] = useDirectUpload(config);
 
   return (
     <form action={formAction} className="space-y-3">
@@ -38,8 +33,8 @@ export default function FileUploadForm({
       )}
       <input
         type="file"
-        name={fieldName}
-        accept={accept}
+        name={config.fieldName}
+        accept={config.allowedTypes.join(",")}
         required
         className="block w-full text-sm text-stone-600 file:mr-3 file:rounded-full file:border-0 file:bg-stone-900 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-white"
       />

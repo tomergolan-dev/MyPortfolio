@@ -139,55 +139,36 @@ export async function updateProject(
   return { success: true };
 }
 
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-
-export async function uploadProjectImage(
+export async function addProjectImage(
   projectId: string,
-  _prev: UploadState,
-  formData: FormData,
+  file: { path: string },
 ): Promise<UploadState> {
   const { supabase } = await requireAdmin();
-
-  const file = formData.get("image");
-  if (!(file instanceof File) || file.size === 0) {
-    return { error: "Choose an image to upload." };
-  }
-  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-    return { error: "Image must be a JPEG, PNG, or WebP image." };
+  const escapedId = projectId.replace(/[^a-zA-Z0-9-]/g, "");
+  if (!new RegExp(`^${escapedId}-\\d+\\.(jpeg|png|webp)$`).test(file.path)) {
+    return { error: "Invalid upload." };
   }
 
-  try {
-    const ext = file.type.split("/")[1];
-    const filename = `${projectId}-${Date.now()}.${ext}`;
-    const { error: uploadError } = await supabase.storage
-      .from("project-images")
-      .upload(filename, file, { contentType: file.type, upsert: true });
-    if (uploadError) return { error: uploadError.message };
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("project-images").getPublicUrl(file.path);
 
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("project-images").getPublicUrl(filename);
+  const { data: existing } = await supabase
+    .from("project_images")
+    .select("order_index")
+    .eq("project_id", projectId)
+    .order("order_index", { ascending: false })
+    .limit(1);
+  const nextOrder = existing && existing.length > 0 ? existing[0].order_index + 1 : 0;
 
-    const { data: existing } = await supabase
-      .from("project_images")
-      .select("order_index")
-      .eq("project_id", projectId)
-      .order("order_index", { ascending: false })
-      .limit(1);
-    const nextOrder = existing && existing.length > 0 ? existing[0].order_index + 1 : 0;
+  const { error } = await supabase
+    .from("project_images")
+    .insert({ project_id: projectId, url: publicUrl, alt_text: "", order_index: nextOrder });
+  if (error) return { error: error.message };
 
-    const { error: insertError } = await supabase
-      .from("project_images")
-      .insert({ project_id: projectId, url: publicUrl, alt_text: "", order_index: nextOrder });
-    if (insertError) return { error: insertError.message };
-
-    revalidatePath("/");
-    revalidatePath(`/admin/projects/${projectId}`);
-    return { success: true };
-  } catch (error) {
-    console.error("uploadProjectImage failed:", error);
-    return { error: error instanceof Error ? error.message : "Upload failed. Please try again." };
-  }
+  revalidatePath("/");
+  revalidatePath(`/admin/projects/${projectId}`);
+  return { success: true };
 }
 
 export async function deleteProjectImage(imageId: string, projectId: string) {

@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/lib/supabase/require-admin";
 import FileUploadForm from "@/components/admin/FileUploadForm";
 import SettingsForm from "./SettingsForm";
-import { uploadProfilePhoto, uploadResume } from "./actions";
+import { saveProfilePhoto, saveResume } from "./actions";
 import type { SiteSettings } from "@/types/database";
 
 export default async function SettingsPage() {
@@ -28,9 +28,13 @@ export default async function SettingsPage() {
       <div className="mt-6 grid gap-6 sm:grid-cols-2">
         <div className="rounded-2xl border border-stone-900/10 bg-white/60 p-6">
           <FileUploadForm
-            action={uploadResume}
+            onUploaded={saveResume}
+            bucket="resume"
             fieldName="resume"
-            accept="application/pdf"
+            prefix="resume"
+            allowedTypes={["application/pdf"]}
+            maxBytes={10 * 1024 * 1024}
+            typeError="Resume must be a PDF file."
             label="Resume (PDF)"
             currentUrl={settings.resume_url}
             currentLabel={settings.resume_filename ?? "Current resume"}
@@ -38,9 +42,13 @@ export default async function SettingsPage() {
         </div>
         <div className="rounded-2xl border border-stone-900/10 bg-white/60 p-6">
           <FileUploadForm
-            action={uploadProfilePhoto}
+            onUploaded={saveProfilePhoto}
+            bucket="profile"
             fieldName="photo"
-            accept="image/jpeg,image/png,image/webp"
+            prefix="profile"
+            allowedTypes={["image/jpeg", "image/png", "image/webp"]}
+            maxBytes={10 * 1024 * 1024}
+            typeError="Photo must be a JPEG, PNG, or WebP image."
             label="Profile photo"
             currentUrl={settings.profile_image_url}
             currentLabel="Current photo"

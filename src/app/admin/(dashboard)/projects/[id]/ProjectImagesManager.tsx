@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState } from "react";
 import { ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
-import type { UploadState } from "@/components/admin/FileUploadForm";
-import { deleteProjectImage, moveProjectImage, uploadProjectImage } from "../actions";
+import { useDirectUpload } from "@/components/admin/useDirectUpload";
+import { addProjectImage, deleteProjectImage, moveProjectImage } from "../actions";
 import type { ProjectImage } from "@/types/database";
 
 export default function ProjectImagesManager({
@@ -14,10 +13,15 @@ export default function ProjectImagesManager({
   projectId: string;
   images: ProjectImage[];
 }) {
-  const [state, formAction, pending] = useActionState<UploadState, FormData>(
-    uploadProjectImage.bind(null, projectId),
-    {},
-  );
+  const [state, formAction, pending] = useDirectUpload({
+    bucket: "project-images",
+    fieldName: "image",
+    prefix: projectId,
+    allowedTypes: ["image/jpeg", "image/png", "image/webp"],
+    maxBytes: 10 * 1024 * 1024,
+    typeError: "Image must be a JPEG, PNG, or WebP image.",
+    onUploaded: addProjectImage.bind(null, projectId),
+  });
 
   return (
     <div>
